@@ -2,6 +2,7 @@ import {
   ConflictException,
   Inject,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -13,11 +14,14 @@ import { RegisterResponseDto } from '../dtos/register-response.dto';
 
 @Injectable()
 export class AuthService {
+  private readonly logger: Logger = new Logger(AuthService.name);
+
   constructor(
     @Inject('AUTH_SERVICE') private readonly authServiceClient: ClientProxy,
   ) {}
 
   async login(data: LoginRequestDto): Promise<LoginResponseDto> {
+    this.logger.log('Log in user');
     const res = await firstValueFrom(
       this.authServiceClient.send<LoginResponseDto>({ cmd: 'login' }, data),
     );
