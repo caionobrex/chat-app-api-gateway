@@ -1,4 +1,9 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { CreateMessageRequestDto } from '../dtos/create-message-request.dto';
@@ -26,10 +31,14 @@ export class ChatsService {
   }
 
   async createChat(userId: number, contactId: number) {
-    return this.chatService.send(
-      { cmd: 'create-chat' },
-      { participants: [userId, contactId] },
+    const res = await firstValueFrom(
+      this.chatService.send(
+        { cmd: 'create-chat' },
+        { participants: [userId, contactId] },
+      ),
     );
+    if (!res.chat) throw new ConflictException();
+    return res.chat;
   }
 
   async createMessage(
