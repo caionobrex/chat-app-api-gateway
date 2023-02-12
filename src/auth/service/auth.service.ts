@@ -39,4 +39,11 @@ export class AuthService {
       token: res.token,
     };
   }
+
+  async refreshToken(refreshToken: string) {
+    const res = await firstValueFrom(
+      this.authServiceClient.send({ cmd: 'refresh-token' }, { refreshToken }),
+    );
+    return res;
+  }
 }

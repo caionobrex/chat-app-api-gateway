@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AuthController } from './controller/auth.controller';
 import { JwtStrategy } from './passport-strategies/jwt.strategy';
+import { RefreshTokenStrategy } from './passport-strategies/refresh-token.strategy';
 import { AuthService } from './service/auth.service';
 
 const clientModules = [
@@ -25,7 +26,7 @@ const clientModules = [
 @Module({
   imports: [...clientModules],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, RefreshTokenStrategy],
   exports: [...clientModules],
 })
 export default class AuthModule {}
